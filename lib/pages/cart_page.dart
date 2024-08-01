@@ -1,4 +1,8 @@
+import 'package:f25_shopping_app_provider_package/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/cart_item_model.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -15,6 +19,76 @@ class CartPage extends StatelessWidget {
             color: Colors.deepOrange,
           ),
         ),
+      ),
+      body: Consumer<CartProvider>(
+        builder:
+            (BuildContext context, CartProvider cartProvider, Widget? child) {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: cartProvider.items.length,
+                  itemBuilder: (context, index) {
+                    // Current index of list of item values i.e CartModel object item builder like loop
+                    final CartItemModel cartItemModel = cartProvider.items.values.toList()[index];
+
+                    return Container(
+                      color: Colors.orange.withOpacity(0.5),
+                      margin: const EdgeInsets.all(5),
+                      child: ListTile(
+                        title: Text(cartItemModel.title),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(cartItemModel.id),
+                            Text(
+                                "\$ ${cartItemModel.price} x ${cartItemModel.quantity}"),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                cartProvider.removeSingleItem(cartItemModel.id);
+                                _customSnackBar(
+                                    context,
+                                    cartItemModel.quantity == 1 // obj.attributes
+                                        ? "Removed from cart !"
+                                        : "One Item Removed");
+                              },
+                              icon: const Icon(Icons.remove),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                cartProvider.removeItem(cartItemModel.id); // id of an one obj
+                                _customSnackBar(context, "Removed from cart !");
+                              },
+                              icon: const Icon(Icons.remove_shopping_cart),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _customSnackBar(BuildContext context, String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          title,
+          style: TextStyle(fontSize: 18),
+        ),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

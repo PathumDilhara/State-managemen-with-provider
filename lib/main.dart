@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => CartProvider(), // which provider this should listen
+      create: (context) => CartProvider(), // which provider this should listen, Listening to single provider
       child: const MyApp(),
     ),
   );

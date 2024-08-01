@@ -67,7 +67,8 @@ class ProductPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final ProductModel product = products[index];
           return Card(
-            child: Consumer<CartProvider>(   // Wrap the smallest widget
+            child: Consumer<CartProvider>(
+              // Wrap the smallest widget
               // Consumer means what do the changes
               // Cart provider is already defined
               builder: (BuildContext context, CartProvider cartProvider,
@@ -83,8 +84,15 @@ class ProductPage extends StatelessWidget {
                       const SizedBox(
                         width: 50,
                       ),
-                      // todo :fill this
-                      const Text("0"),
+                      Text(
+                        cartProvider.items.containsKey(product.id)
+                            ? cartProvider.items[product.id]!.quantity
+                                .toString()
+                            : "0",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   // tileColor: Colors.orangeAccent,
@@ -109,8 +117,15 @@ class ProductPage extends StatelessWidget {
                             product.price,
                             product.title,
                           );
+                          // Snack bar for display
+                          _customSnackBar(context, "Item added to cart");
                         },
-                        icon: const Icon(Icons.shopping_cart),
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: cartProvider.items.containsKey(product.id)
+                              ? Colors.deepOrange
+                              : Colors.grey,
+                        ),
                       ),
                     ],
                   ),
@@ -119,6 +134,15 @@ class ProductPage extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _customSnackBar(BuildContext context, String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(title, style: TextStyle(fontSize: 18),),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

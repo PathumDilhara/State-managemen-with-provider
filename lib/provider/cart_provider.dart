@@ -1,11 +1,12 @@
 import 'package:f25_shopping_app_provider_package/models/cart_item_model.dart';
 import 'package:flutter/material.dart';
 
-class CartProvider extends ChangeNotifier { // from language,
+class CartProvider extends ChangeNotifier {
+  // inbuilt class ChangeNotifier
   // Cart item state
   Map<String, CartItemModel> _items = {}; // = {"id" : CartItem(...), ...}
 
-  // getter for _items
+  // getter for _items since it is private
   Map<String, CartItemModel> get items {
     return {..._items}; // spread operator return all items each by each
   }
@@ -25,7 +26,7 @@ class CartProvider extends ChangeNotifier { // from language,
           quantity: existingItem.quantity + 1,
         ),
       );
-      print("Added existing data");
+      //print("Added existing data");
     } else {
       _items.putIfAbsent(
         productId,
@@ -36,8 +37,35 @@ class CartProvider extends ChangeNotifier { // from language,
           quantity: 1, // 1 :Since first time we add this to list
         ),
       );
-      print("Added new data");
+      //print("Added new data");
     }
     notifyListeners(); // Call the all registered listeners (Product Page, Cart Page, )
+  }
+
+  // Method to remove entire item using productId
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  // Method to decrease item count / single item remover
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]!.quantity > 1) {
+      _items.update(
+        productId,
+        (existingCartItem) => CartItemModel(
+          id: existingCartItem.id,
+          title: existingCartItem.title,
+          price: existingCartItem.price,
+          quantity: existingCartItem.quantity - 1,
+        ),
+      );
+    } else {
+      _items.remove(productId);
+    }
+    notifyListeners();
   }
 }
