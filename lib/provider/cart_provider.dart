@@ -68,4 +68,21 @@ class CartProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // clear all in cart page
+  void  clearAll(){
+    _items = {};
+    notifyListeners();
+  }
+
+  // calculate total in cart
+  double get totalAMount{
+    var total = 0.0;
+    _items.forEach((key, cartItem){
+      total += cartItem.price * cartItem.quantity;
+    });
+
+    notifyListeners();
+    return total;
+  }
 }

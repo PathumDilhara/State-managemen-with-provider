@@ -1,12 +1,19 @@
 import 'package:f25_shopping_app_provider_package/pages/product_page.dart';
 import 'package:f25_shopping_app_provider_package/provider/cart_provider.dart';
+import 'package:f25_shopping_app_provider_package/provider/favourite_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartProvider(), // which provider this should listen, Listening to single provider
+    // for multi providers
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => CartProvider(),),
+      ChangeNotifierProvider(create: (context) => FavouriteProvider(),),
+    ],
+        // for single providers
+    // ChangeNotifierProvider(
+    //   create: (context) => CartProvider(), // which provider this should listen, Listening to single provider
       child: const MyApp(),
     ),
   );

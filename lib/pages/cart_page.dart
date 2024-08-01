@@ -31,7 +31,8 @@ class CartPage extends StatelessWidget {
                   itemCount: cartProvider.items.length,
                   itemBuilder: (context, index) {
                     // Current index of list of item values i.e CartModel object item builder like loop
-                    final CartItemModel cartItemModel = cartProvider.items.values.toList()[index];
+                    final CartItemModel cartItemModel =
+                        cartProvider.items.values.toList()[index];
 
                     return Container(
                       color: Colors.orange.withOpacity(0.5),
@@ -54,7 +55,8 @@ class CartPage extends StatelessWidget {
                                 cartProvider.removeSingleItem(cartItemModel.id);
                                 _customSnackBar(
                                     context,
-                                    cartItemModel.quantity == 1 // obj.attributes
+                                    cartItemModel.quantity ==
+                                            1 // obj.attributes
                                         ? "Removed from cart !"
                                         : "One Item Removed");
                               },
@@ -62,7 +64,8 @@ class CartPage extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {
-                                cartProvider.removeItem(cartItemModel.id); // id of an one obj
+                                cartProvider.removeItem(
+                                    cartItemModel.id); // id of an one obj
                                 _customSnackBar(context, "Removed from cart !");
                               },
                               icon: const Icon(Icons.remove_shopping_cart),
@@ -74,6 +77,20 @@ class CartPage extends StatelessWidget {
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "Total : \$${cartProvider.totalAMount.toStringAsFixed(2)}",
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ElevatedButton(onPressed: (){
+                  cartProvider.clearAll();
+                  _customSnackBar(context, "Cart cleared !");
+                }, child: const Text("Clear Cart")),
+              )
             ],
           );
         },
@@ -86,7 +103,7 @@ class CartPage extends StatelessWidget {
       SnackBar(
         content: Text(
           title,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
         duration: const Duration(seconds: 1),
       ),

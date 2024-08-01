@@ -6,6 +6,8 @@ import 'package:f25_shopping_app_provider_package/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/favourite_provider.dart';
+
 class ProductPage extends StatelessWidget {
   const ProductPage({super.key});
 
@@ -67,12 +69,13 @@ class ProductPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final ProductModel product = products[index];
           return Card(
-            child: Consumer<CartProvider>(
+            // child: Consumer<CartProvider>( // for single consumer
+            child: Consumer2<CartProvider, FavouriteProvider>(
               // Wrap the smallest widget
               // Consumer means what do the changes
               // Cart provider is already defined
               builder: (BuildContext context, CartProvider cartProvider,
-                  Widget? child) {
+                  FavouriteProvider favouriteProvider, Widget? child) {
                 return ListTile(
                   title: Row(
                     children: [
@@ -107,8 +110,22 @@ class ProductPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.favorite_border),
+                        onPressed: () {
+                          favouriteProvider.toggleFavourites(product.id);
+                          _customSnackBar(
+                              context,
+                              favouriteProvider.isFavourite(product.id)
+                                  ? "Added to favourite"
+                                  : "Removed from favourite");
+                        },
+                        icon: Icon(
+                          favouriteProvider.isFavourite(product.id)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: favouriteProvider.isFavourite(product.id)
+                              ? Colors.pinkAccent
+                              : Colors.grey,
+                        ),
                       ),
                       IconButton(
                         onPressed: () {
@@ -141,7 +158,10 @@ class ProductPage extends StatelessWidget {
   void _customSnackBar(BuildContext context, String title) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(title, style: TextStyle(fontSize: 18),),
+        content: Text(
+          title,
+          style: TextStyle(fontSize: 18),
+        ),
         duration: const Duration(seconds: 1),
       ),
     );
